@@ -1,5 +1,5 @@
 /*
-== Definition: reprepro::filterlist
+== Definition: make_apt_repo::filterlist
 
 Adds a FilterList
 
@@ -10,11 +10,11 @@ Parameters:
 - *packages*: a list of packages
 
 Requires:
-- Class["reprepro"]
+- Class["make_apt_repo"]
 
 Example usage:
 
-  reprepro::filterlist {"lenny-backports":
+  make_apt_repo::filterlist {"lenny-backports":
     ensure     => present,
     repository => "dev",
     packages   => [
@@ -28,19 +28,19 @@ Warning:
 - Packages list have the same syntax as the output of dpkg --get-selections
 
 */
-define reprepro::filterlist (
+define make_apt_repo::filterlist (
   $repository,
   $packages,
   $ensure=present
 ) {
 
-  include reprepro::params
+  include make_apt_repo::params
 
-  file {"${reprepro::params::basedir}/${repository}/conf/${name}-filter-list":
+  file {"${make_apt_repo::params::basedir}/${repository}/conf/${name}-filter-list":
     ensure  => $ensure,
     owner   => 'root',
-    group   => ${reprepro::params::group_name},
+    group   => ${make_apt_repo::params::group_name},
     mode    => '0664',
-    content => template('reprepro/filterlist.erb'),
+    content => template('make_apt_repo/filterlist.erb'),
   }
 }

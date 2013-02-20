@@ -1,38 +1,38 @@
-class reprepro (
-  $basedir = $::reprepro::params::basedir
-) inherits reprepro::params {
+class make_apt_repo (
+  $basedir = $::make_apt_repo::params::basedir
+) inherits make_apt_repo::params {
 
-  package { $::reprepro::params::package_name:
-    ensure => $::reprepro::params::ensure,
+  package { $::make_apt_repo::params::package_name:
+    ensure => $::make_apt_repo::params::ensure,
   }
 
-  group { 'reprepro':
-    name   => $::reprepro::params::group_name, 
+  group { 'make_apt_repo':
+    name   => $::make_apt_repo::params::group_name, 
     ensure => present,
   }
 
-  user { 'reprepro':
-    name    => $::reprepro::params::user_name, 
+  user { 'make_apt_repo':
+    name    => $::make_apt_repo::params::user_name, 
     ensure  => present,
     home    => $basedir,
     shell   => '/bin/bash',
-    comment => 'reprepro base directory',
-    gid     => 'reprepro',
-    require => Group['reprepro'],
+    comment => 'make_apt_repo base directory',
+    gid     => 'make_apt_repo',
+    require => Group['make_apt_repo'],
   }
 
   file { $basedir:
     ensure  => directory,
-    owner   => $::reprepro::params::user_name,
-    group   => $::reprepro::params::group_name,
+    owner   => $::make_apt_repo::params::user_name,
+    group   => $::make_apt_repo::params::group_name,
     mode    => '0755',
-    require => User['reprepro'],
+    require => User['make_apt_repo'],
   }
 
   file { "${basedir}/.gnupg":
     ensure  => directory,
-    owner   => $::reprepro::params::user_name,
-    group   => $::reprepro::params::group_name,
+    owner   => $::make_apt_repo::params::user_name,
+    group   => $::make_apt_repo::params::group_name,
     mode    => '0700',
     require => File[$basedir],
   }

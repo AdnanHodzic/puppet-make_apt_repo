@@ -1,5 +1,5 @@
 /*
-== Definition: reprepro::update
+== Definition: make_apt_repo::update
 Adds a packages repository.
 
 Parameters:
@@ -11,19 +11,19 @@ Parameters:
 - *filter_name*: a list of filenames in the format of dpkg --get-selections
 
 Requires:
-- Class["reprepro"]
+- Class["make_apt_repo"]
 
 Example usage:
 
-  reprepro::update {"lenny-backports":
+  make_apt_repo::update {"squeeze-backports":
     ensure      => present,
     repository  => "dev",
     url         => 'http://backports.debian.org/debian-backports',
-    filter_name => "lenny-backports",
+    filter_name => "squeeze-backports",
   }
 
 */
-define reprepro::update (
+define make_apt_repo::update (
   $suite,
   $repository,
   $url,
@@ -34,7 +34,7 @@ define reprepro::update (
   $filter_name = ''
 ) {
 
-  include reprepro::params
+  include make_apt_repo::params
 
   if $filter_name != '' {
     if $filter_action == '' {
@@ -54,13 +54,13 @@ define reprepro::update (
   common::concatfilepart {"update-${name}":
     ensure  => $ensure,
     manage  => $manage,
-    content => template('reprepro/update.erb'),
-    file    => "${reprepro::params::basedir}/${repository}/conf/updates",
+    content => template('make_apt_repo/update.erb'),
+    file    => "${make_apt_repo::params::basedir}/${repository}/conf/updates",
     require => $filter_name ? {
-      ''      => Reprepro::Repository[$repository],
+      ''      => make_apt_repo::Repository[$repository],
       default => [
-        Reprepro::Repository[$repository],
-        Reprepro::Filterlist[$filter_name]
+        make_apt_repo::Repository[$repository],
+        make_apt_repo::Filterlist[$filter_name]
       ],
     }
   }
